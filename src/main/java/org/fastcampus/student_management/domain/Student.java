@@ -32,4 +32,19 @@ public class Student {
   public boolean isActivate() {
     return activated;
   }
+
+
+  public void activate() {
+    if (activated) {
+      throw new IllegalArgumentException();
+    }
+    activated = true;
+  }
+
+  public void disActivate() {
+    if (!activated) {
+      throw new IllegalArgumentException();
+    }
+    activated = false;
+  }
 }
