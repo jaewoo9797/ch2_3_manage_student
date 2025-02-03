@@ -1,8 +1,6 @@
 package org.fastcampus.student_management.application.course;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.fastcampus.student_management.application.course.dto.CourseInfoDto;
 import org.fastcampus.student_management.application.student.StudentService;
 import org.fastcampus.student_management.domain.Course;
@@ -12,32 +10,33 @@ import org.fastcampus.student_management.domain.Student;
 import org.fastcampus.student_management.repo.CourseRepository;
 
 public class CourseService {
-  private final CourseRepository courseRepository;
-  private final StudentService studentService;
 
-  public CourseService(CourseRepository courseRepository, StudentService studentService) {
-    this.courseRepository = courseRepository;
-    this.studentService = studentService;
-  }
+    private final CourseRepository courseRepository;
+    private final StudentService studentService;
 
-  public void registerCourse(CourseInfoDto courseInfoDto) {
-    Student student = studentService.getStudent(courseInfoDto.getStudentName());
-    Course course = new Course(student, courseInfoDto.getCourseName(), courseInfoDto.getFee(), courseInfoDto.getDayOfWeek(), courseInfoDto.getCourseTime());
-    courseRepository.save(course);
-  }
+    public CourseService(CourseRepository courseRepository, StudentService studentService) {
+        this.courseRepository = courseRepository;
+        this.studentService = studentService;
+    }
 
-  public List<CourseInfoDto> getCourseDayOfWeek(DayOfWeek dayOfWeek) {
-    List<Course> courses = courseRepository.getCourseDayOfWeek(dayOfWeek);
+    public void registerCourse(CourseInfoDto courseInfoDto) {
+        Student student = studentService.getStudent(courseInfoDto.getStudentName());
+        Course course = new Course(student, courseInfoDto.getCourseName(), courseInfoDto.getFee(),
+            courseInfoDto.getDayOfWeek(), courseInfoDto.getCourseTime());
+        courseRepository.save(course);
+    }
 
-    return courses.stream()
-        .map(CourseInfoDto::new)
-        .toList();
-  }
+    public List<CourseInfoDto> getCourseDayOfWeek(DayOfWeek dayOfWeek) {
+        List<Course> courses = courseRepository.getCourseDayOfWeek(dayOfWeek);
 
-  public void changeFee(String studentName, int fee) {
-    Student student = studentService.getStudent(studentName);
-    List<Course> courses = courseRepository.getCourseListByStudent(studentName);
-    CourseList courseList = new CourseList(courses);
-    courseList.changeFee(fee);
-  }
+        return courses.stream()
+            .map(CourseInfoDto::new)
+            .toList();
+    }
+
+    public void changeFee(String studentName, int fee) {
+        List<Course> courses = courseRepository.getCourseListByStudent(studentName);
+        CourseList courseList = new CourseList(courses);
+        courseList.changeFee(fee);
+    }
 }
